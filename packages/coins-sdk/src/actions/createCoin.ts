@@ -31,6 +31,8 @@ export type CreateCoinArgs = {
   payoutRecipient: Address;
   platformReferrer?: Address;
   initialPurchaseWei?: bigint;
+  currency?: Address;
+  tickLower?: bigint;
 };
 
 export async function createCoinCall({
@@ -39,6 +41,8 @@ export async function createCoinCall({
   uri,
   owners,
   payoutRecipient,
+  currency = null,
+  tickLower = null,
   initialPurchaseWei = 0n,
   platformReferrer = "0x0000000000000000000000000000000000000000",
 }: CreateCoinArgs): Promise<
@@ -55,20 +59,28 @@ export async function createCoinCall({
   // This will throw an error if the metadata is not valid
   await validateMetadataURIContent(uri);
 
+  const args = [
+    payoutRecipient,
+    owners,
+    uri,
+    name,
+    symbol,
+  ];
+  if (currency && tickLower) {
+    args.push(platformReferrer);
+    args.push(currency);
+    args.push(tickLower);
+  } else {
+    args.push(poolConfig);
+    args.push(platformReferrer);
+  }
+  args.push(orderSize);
+
   return {
     abi: zoraFactoryImplABI,
     functionName: "deploy",
     address: COIN_FACTORY_ADDRESS,
-    args: [
-      payoutRecipient,
-      owners,
-      uri,
-      name,
-      symbol,
-      poolConfig,
-      platformReferrer,
-      orderSize,
-    ],
+    args,
     value: initialPurchaseWei,
     dataSuffix: getAttribution(),
   } as const;
