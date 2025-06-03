@@ -1,7 +1,4 @@
 name: Vercel Coins Docs Deployment
-env:
-  VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-  VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
 on:
   push:
     branches:
@@ -12,6 +9,8 @@ jobs:
     env:
       TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
       TURBO_TEAM: ${{ vars.TURBO_TEAM }}
+      VERCEL_ORG_ID: ${{ vars.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ vars.VERCEL_DOCS_PROJECT_ID }}
 
     steps:
       - name: Checkout
@@ -25,7 +24,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-turbo-
 
-      - name: Install node deps and founry
+      - name: Install node deps and foundry
         uses: ./.github/actions/setup_deps
 
       - name: Install Vercel CLI

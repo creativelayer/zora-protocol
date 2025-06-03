@@ -37,7 +37,7 @@ export default defineConfig({
     },
     {
       text: "Legacy NFT Docs",
-      link: "https://nft.docs.zora.co",
+      link: "https://nft-docs.zora.co",
       match: "/nft",
     },
   ],
@@ -171,6 +171,9 @@ export default defineConfig({
     ],
   },
   vite: {
+    build: {
+      outDir: ".vercel/output",
+    },
     plugins: [
       ...(process.env.NODE_ENV === "production"
         ? [
